@@ -1,0 +1,65 @@
+/**
+ * CommitTimeline Component Styles
+ */
+
+.commit-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.commit-timeline-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.commit-timeline-count {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+
+.commit-timeline-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+/* Loading state */
+.commit-timeline-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-md);
+  padding: var(--space-2xl);
+  color: var(--color-text-secondary);
+}
+
+/* Empty state */
+.commit-timeline-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-md);
+  padding: var(--space-2xl);
+  text-align: center;
+}
+
+.commit-timeline-empty-icon {
+  color: var(--color-text-muted);
+}
+
+.commit-timeline-empty-title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+}
+
+.commit-timeline-empty-description {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  max-width: 300px;
+  line-height: var(--line-height-relaxed);
+}

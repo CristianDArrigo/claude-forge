@@ -1,0 +1,93 @@
+/**
+ * PromptInput Component Styles
+ */
+
+.prompt-input-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.prompt-input-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.prompt-input-agent {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  font-size: var(--font-size-sm);
+}
+
+.prompt-input-agent-label {
+  color: var(--color-text-muted);
+}
+
+.prompt-input-agent-name {
+  color: var(--color-text-primary);
+  font-weight: var(--font-weight-medium);
+}
+
+.prompt-input-agent-none {
+  color: var(--color-text-muted);
+  font-style: italic;
+}
+
+.prompt-input-main {
+  display: flex;
+  gap: var(--space-sm);
+  align-items: flex-end;
+}
+
+.prompt-input-textarea {
+  flex: 1;
+  min-height: 44px;
+  max-height: 200px;
+  padding: var(--space-sm) var(--space-md);
+  font-size: var(--font-size-md);
+  font-family: inherit;
+  color: var(--color-text-primary);
+  background-color: var(--color-bg-tertiary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  outline: none;
+  resize: none;
+  transition: border-color var(--transition-fast);
+  line-height: var(--line-height-normal);
+}
+
+.prompt-input-textarea:focus {
+  border-color: var(--color-border-focus);
+}
+
+.prompt-input-textarea::placeholder {
+  color: var(--color-text-muted);
+}
+
+.prompt-input-textarea:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.prompt-input-execute {
+  flex-shrink: 0;
+  height: 44px;
+  padding: 0 var(--space-lg);
+}
+
+.prompt-input-hint {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+}
+
+.prompt-input-hint kbd {
+  display: inline-block;
+  padding: 2px 6px;
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-xs);
+  background-color: var(--color-bg-tertiary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xs);
+}

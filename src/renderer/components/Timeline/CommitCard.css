@@ -1,0 +1,202 @@
+/**
+ * CommitCard Component Styles
+ */
+
+.commit-card {
+  background-color: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  transition: border-color var(--transition-fast);
+}
+
+.commit-card:hover {
+  border-color: var(--color-border-light);
+}
+
+.commit-card-expanded {
+  border-color: var(--color-border-light);
+}
+
+/* Header (collapsed view) */
+.commit-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+  width: 100%;
+  padding: var(--space-md);
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+}
+
+.commit-card-header-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.commit-card-title {
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.commit-card-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+}
+
+.commit-card-agent {
+  color: var(--color-text-secondary);
+}
+
+.commit-card-separator {
+  color: var(--color-text-disabled);
+}
+
+.commit-card-changes {
+  display: flex;
+  gap: var(--space-xs);
+  font-family: var(--font-family-mono);
+}
+
+.commit-card-written {
+  color: var(--color-text-secondary);
+}
+
+.commit-card-deleted {
+  color: var(--color-text-muted);
+}
+
+.commit-card-chevron {
+  flex-shrink: 0;
+  color: var(--color-text-muted);
+  transition: transform var(--transition-fast);
+}
+
+.commit-card-chevron-open {
+  transform: rotate(180deg);
+}
+
+/* Expanded content */
+.commit-card-content {
+  padding: 0 var(--space-md) var(--space-md);
+  border-top: 1px solid var(--color-border);
+}
+
+.commit-card-section {
+  padding-top: var(--space-md);
+}
+
+.commit-card-section:first-child {
+  padding-top: var(--space-md);
+}
+
+.commit-card-section-title {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-sm);
+}
+
+.commit-card-summary {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-primary);
+  line-height: var(--line-height-relaxed);
+}
+
+.commit-card-prompt {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  line-height: var(--line-height-relaxed);
+  font-style: italic;
+}
+
+/* File changes */
+.commit-card-files {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.commit-card-file {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-xs) var(--space-sm);
+  background-color: var(--color-bg-tertiary);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-xs);
+}
+
+.commit-card-file-indicator {
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-bg-elevated);
+  border-radius: var(--radius-xs);
+  font-weight: var(--font-weight-semibold);
+}
+
+.commit-card-file-written .commit-card-file-indicator {
+  color: var(--color-text-secondary);
+}
+
+.commit-card-file-deleted .commit-card-file-indicator {
+  color: var(--color-text-muted);
+}
+
+.commit-card-file-path {
+  flex: 1;
+  color: var(--color-text-secondary);
+  word-break: break-all;
+}
+
+/* Execution info */
+.commit-card-execution {
+  display: flex;
+  gap: var(--space-md);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+.commit-card-error {
+  color: var(--color-text-muted);
+}
+
+/* Raw response */
+.commit-card-raw-toggle {
+  font-size: var(--font-size-xs);
+  padding: var(--space-xs) var(--space-sm);
+}
+
+.commit-card-raw {
+  margin-top: var(--space-sm);
+  padding: var(--space-md);
+  background-color: var(--color-bg-tertiary);
+  border-radius: var(--radius-md);
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  white-space: pre-wrap;
+  word-break: break-word;
+  max-height: 400px;
+  overflow-y: auto;
+  line-height: var(--line-height-relaxed);
+}

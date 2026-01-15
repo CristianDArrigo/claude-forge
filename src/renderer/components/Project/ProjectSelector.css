@@ -1,0 +1,81 @@
+/**
+ * ProjectSelector Component Styles
+ */
+
+.project-selector {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  background-color: var(--color-bg-primary);
+}
+
+.project-selector-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-xl);
+  max-width: 400px;
+  padding: var(--space-2xl);
+  text-align: center;
+}
+
+.project-selector-header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.project-selector-title {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  letter-spacing: -0.5px;
+}
+
+.project-selector-subtitle {
+  font-size: var(--font-size-md);
+  color: var(--color-text-secondary);
+}
+
+.project-selector-actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  width: 100%;
+}
+
+.project-selector-btn {
+  width: 100%;
+  padding: var(--space-md);
+  font-size: var(--font-size-md);
+}
+
+.project-selector-description {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  line-height: var(--line-height-relaxed);
+}
+
+.project-selector-description code {
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-xs);
+  padding: 2px 6px;
+  background-color: var(--color-bg-tertiary);
+  border-radius: var(--radius-xs);
+}
+
+.project-selector-error {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+  width: 100%;
+  padding: var(--space-md);
+  background-color: var(--color-bg-tertiary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+}
