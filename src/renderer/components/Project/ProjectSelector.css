@@ -29,10 +29,10 @@
 }
 
 .project-selector-logo {
-  width: 80px;
-  height: 80px;
+  width: 200px;
+  height: auto;
   object-fit: contain;
-  margin-bottom: var(--space-sm);
+  margin-bottom: var(--space-md);
 }
 
 .project-selector-title {

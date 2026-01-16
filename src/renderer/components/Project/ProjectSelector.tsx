@@ -26,7 +26,6 @@ function ProjectSelector(): React.ReactElement {
             alt="Claude Forge"
             className="project-selector-logo"
           />
-          <h1 className="project-selector-title">Claude Forge</h1>
           <p className="project-selector-subtitle">
             AI Engineering Environment
           </p>
