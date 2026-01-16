@@ -83,16 +83,19 @@ export class TaskManager {
       // Spawn Claude CLI process with non-interactive flags
       // --print: non-interactive output mode
       // --dangerously-skip-permissions: bypass all permission checks for full automation
-      // shell: false to avoid escaping issues with complex prompts
+      // Use shell: true on Windows for PATH resolution, pass prompt via stdin to avoid escaping issues
       const proc = spawn('claude', [
         '--print',
-        '--dangerously-skip-permissions',
-        composedPrompt
+        '--dangerously-skip-permissions'
       ], {
         cwd: request.projectPath,
-        shell: false,
+        shell: true,
         env: { ...process.env }
       });
+
+      // Pass prompt via stdin to avoid shell escaping issues
+      proc.stdin.write(composedPrompt);
+      proc.stdin.end();
 
       this.processes.set(taskId, proc);
 
