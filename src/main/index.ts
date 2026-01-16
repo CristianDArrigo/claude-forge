@@ -15,6 +15,13 @@ let mainWindow: BrowserWindow | null = null;
 // Determine if we're running in development mode
 const isDev = !app.isPackaged;
 
+// Prevent multiple instances of the app
+const gotTheLock = app.requestSingleInstanceLock();
+
+if (!gotTheLock) {
+  app.quit();
+}
+
 /**
  * Creates the main application window with appropriate settings
  * for a desktop engineering environment.
@@ -73,6 +80,14 @@ app.whenReady().then(() => {
       createWindow();
     }
   });
+});
+
+// Focus existing window if second instance is launched
+app.on('second-instance', () => {
+  if (mainWindow) {
+    if (mainWindow.isMinimized()) mainWindow.restore();
+    mainWindow.focus();
+  }
 });
 
 // Quit when all windows are closed (except on macOS)
