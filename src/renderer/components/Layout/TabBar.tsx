@@ -41,10 +41,13 @@ function TabBar(): React.ReactElement {
           const runningCount = getRunningCount(project.id);
 
           return (
-            <button
+            <div
               key={project.id}
               className={`tab-bar-tab ${isActive ? 'tab-bar-tab-active' : ''}`}
               onClick={() => handleTabClick(project.id)}
+              role="tab"
+              tabIndex={0}
+              aria-selected={isActive}
             >
               <span className="tab-bar-tab-name">{project.name}</span>
               {runningCount > 0 && (
@@ -60,7 +63,7 @@ function TabBar(): React.ReactElement {
                   <line x1="6" y1="6" x2="18" y2="18" />
                 </svg>
               </button>
-            </button>
+            </div>
           );
         })}
       </div>

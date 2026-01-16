@@ -7,6 +7,7 @@
 
 import React from 'react';
 import { useProjectStore } from '../../stores/projectStore';
+import logoImage from '../../../../assets/logo.png';
 import './ProjectSelector.css';
 
 /**
@@ -20,6 +21,11 @@ function ProjectSelector(): React.ReactElement {
       <div className="project-selector-content">
         {/* Logo/Title */}
         <div className="project-selector-header">
+          <img
+            src={logoImage}
+            alt="Claude Forge"
+            className="project-selector-logo"
+          />
           <h1 className="project-selector-title">Claude Forge</h1>
           <p className="project-selector-subtitle">
             AI Engineering Environment

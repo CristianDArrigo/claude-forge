@@ -5,7 +5,7 @@
  * multi-project tabs, sidebar, main content, and tasks panel.
  */
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useProjectStore } from './stores/projectStore';
 import { useAgentStore } from './stores/agentStore';
 import { useCommitStore } from './stores/commitStore';
@@ -15,19 +15,33 @@ import Sidebar from './components/Layout/Sidebar';
 import MainContent from './components/Layout/MainContent';
 import TasksPanel from './components/Tasks/TasksPanel';
 import ProjectSelector from './components/Project/ProjectSelector';
+import SplashScreen from './components/SplashScreen/SplashScreen';
 
 /**
  * Main application component.
  * Displays project selector if no projects are open,
  * otherwise shows the full workspace with tabs.
  */
+// Splash screen duration in milliseconds
+const SPLASH_DURATION = 2000;
+
 function App(): React.ReactElement {
   const { projects, isLoading, getActiveProject } = useProjectStore();
   const { loadAgents } = useAgentStore();
   const { loadCommits, clearCommits } = useCommitStore();
   const { initializeListeners } = useTaskStore();
 
+  const [showSplash, setShowSplash] = useState(true);
   const activeProject = getActiveProject();
+
+  // Hide splash screen after duration
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowSplash(false);
+    }, SPLASH_DURATION);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   // Load agents on mount
   useEffect(() => {
@@ -48,6 +62,11 @@ function App(): React.ReactElement {
       clearCommits();
     }
   }, [activeProject, loadCommits, clearCommits]);
+
+  // Show splash screen on initial load
+  if (showSplash) {
+    return <SplashScreen />;
+  }
 
   // Show loading state
   if (isLoading) {
