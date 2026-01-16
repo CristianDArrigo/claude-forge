@@ -46,8 +46,7 @@ function createWindow(): void {
   if (isDev) {
     // Development: load from Vite dev server
     mainWindow.loadURL('http://localhost:5173');
-    // Open DevTools in development
-    mainWindow.webContents.openDevTools();
+    // DevTools can be opened manually with Ctrl+Shift+I or F12
   } else {
     // Production: load from built files
     mainWindow.loadFile(join(__dirname, '../renderer/index.html'));

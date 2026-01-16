@@ -23,7 +23,7 @@ import SplashScreen from './components/SplashScreen/SplashScreen';
  * otherwise shows the full workspace with tabs.
  */
 // Splash screen duration in milliseconds
-const SPLASH_DURATION = 2000;
+const SPLASH_DURATION = 3000;
 
 function App(): React.ReactElement {
   const { projects, isLoading, getActiveProject } = useProjectStore();
