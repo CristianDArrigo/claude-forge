@@ -10,12 +10,14 @@ import { useProjectStore } from './stores/projectStore';
 import { useAgentStore } from './stores/agentStore';
 import { useCommitStore } from './stores/commitStore';
 import { useTaskStore } from './stores/taskStore';
+import { useSettingsStore } from './stores/settingsStore';
 import TabBar from './components/Layout/TabBar';
 import Sidebar from './components/Layout/Sidebar';
 import MainContent from './components/Layout/MainContent';
 import TasksPanel from './components/Tasks/TasksPanel';
 import ProjectSelector from './components/Project/ProjectSelector';
 import SplashScreen from './components/SplashScreen/SplashScreen';
+import SettingsPanel from './components/Settings/SettingsPanel';
 
 /**
  * Main application component.
@@ -31,6 +33,7 @@ function App(): React.ReactElement {
   const { loadAgents } = useAgentStore();
   const { loadCommits, clearCommits } = useCommitStore();
   const { initializeListeners } = useTaskStore();
+  const { loadSettings } = useSettingsStore();
 
   const [showSplash, setShowSplash] = useState(true);
   const [fadeOutSplash, setFadeOutSplash] = useState(false);
@@ -54,10 +57,11 @@ function App(): React.ReactElement {
     };
   }, []);
 
-  // Load agents on mount
+  // Load agents and settings on mount
   useEffect(() => {
     loadAgents();
-  }, [loadAgents]);
+    loadSettings();
+  }, [loadAgents, loadSettings]);
 
   // Initialize task event listeners
   useEffect(() => {
@@ -103,6 +107,7 @@ function App(): React.ReactElement {
         <MainContent />
       </div>
       <TasksPanel />
+      <SettingsPanel />
     </div>
   );
 }

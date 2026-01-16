@@ -1,0 +1,133 @@
+/**
+ * DiffViewer Component Styles
+ */
+
+.diff-viewer {
+  margin-top: var(--space-sm);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background-color: var(--color-bg-primary);
+}
+
+.diff-viewer-loading,
+.diff-viewer-error,
+.diff-viewer-empty {
+  padding: var(--space-md);
+  text-align: center;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+
+.diff-viewer-error {
+  color: var(--color-error, #ef4444);
+}
+
+.diff-content {
+  margin: 0;
+  padding: var(--space-sm);
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-xs);
+  line-height: 1.5;
+  overflow-x: auto;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.diff-content::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.diff-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.diff-content::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 4px;
+}
+
+.diff-content::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-muted);
+}
+
+.diff-line {
+  display: flex;
+  white-space: pre;
+}
+
+.diff-line-prefix {
+  width: 16px;
+  flex-shrink: 0;
+  text-align: center;
+  user-select: none;
+}
+
+.diff-line-content {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Line types */
+.diff-line-add {
+  background-color: rgba(74, 222, 128, 0.15);
+  color: var(--color-success, #4ade80);
+}
+
+.diff-line-add .diff-line-prefix {
+  color: var(--color-success, #4ade80);
+}
+
+.diff-line-remove {
+  background-color: rgba(239, 68, 68, 0.15);
+  color: var(--color-error, #ef4444);
+}
+
+.diff-line-remove .diff-line-prefix {
+  color: var(--color-error, #ef4444);
+}
+
+.diff-line-context {
+  color: var(--color-text-secondary);
+}
+
+.diff-line-header {
+  background-color: var(--color-bg-tertiary);
+  color: var(--color-text-muted);
+  font-weight: var(--font-weight-medium);
+}
+
+.diff-line-meta {
+  color: var(--color-text-muted);
+  font-weight: var(--font-weight-semibold);
+}
+
+/* Inline diff viewer */
+.inline-diff-viewer {
+  margin-top: var(--space-xs);
+}
+
+.inline-diff-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-xs) var(--space-sm);
+  font-size: var(--font-size-xs);
+  font-family: inherit;
+  color: var(--color-text-muted);
+  background: none;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.inline-diff-toggle:hover {
+  color: var(--color-text-primary);
+  background-color: var(--color-bg-hover);
+}
+
+.inline-diff-toggle svg {
+  transition: transform var(--transition-fast);
+}

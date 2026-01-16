@@ -7,12 +7,15 @@
  */
 
 import { ipcMain, dialog } from 'electron';
-import { IPC_CHANNELS, Agent, ExecutionRequest, TaskStartRequest } from '../shared/types';
+import { IPC_CHANNELS, Agent, ExecutionRequest, TaskStartRequest, AppSettings } from '../shared/types';
 import { projectManager } from './services/project-manager';
 import { agentManager } from './services/agent-manager';
 import { claudeExecutor } from './services/claude-executor';
 import { commitManager } from './services/commit-manager';
 import { taskManager } from './services/task-manager';
+import { settingsManager } from './services/settings-manager';
+import { fileManager } from './services/file-manager';
+import { gitManager } from './services/git-manager';
 
 /**
  * Registers all IPC handlers.
@@ -138,5 +141,66 @@ export function registerIPCHandlers(): void {
   // Get a specific task
   ipcMain.handle(IPC_CHANNELS.TASK_GET, async (_event, taskId: string) => {
     return taskManager.getTask(taskId) || null;
+  });
+
+  // Settings handlers
+
+  // Load all settings
+  ipcMain.handle(IPC_CHANNELS.SETTINGS_LOAD, async () => {
+    return settingsManager.getSettings();
+  });
+
+  // Save settings (partial update)
+  ipcMain.handle(IPC_CHANNELS.SETTINGS_SAVE, async (_event, updates: Partial<AppSettings>) => {
+    return settingsManager.updateSettings(updates);
+  });
+
+  // File explorer handlers
+
+  // List directory contents
+  ipcMain.handle(IPC_CHANNELS.FILES_LIST, async (_event, dirPath: string) => {
+    return fileManager.getChildren(dirPath);
+  });
+
+  // Get directory tree (for initial load)
+  ipcMain.handle(IPC_CHANNELS.FILES_READ, async (_event, rootPath: string) => {
+    return fileManager.getDirectoryTree(rootPath);
+  });
+
+  // Git handlers
+
+  // Get git status
+  ipcMain.handle(IPC_CHANNELS.GIT_STATUS, async (_event, path: string) => {
+    return gitManager.getStatus(path);
+  });
+
+  // Stage a file
+  ipcMain.handle(IPC_CHANNELS.GIT_STAGE, async (_event, cwd: string, filePath: string) => {
+    return gitManager.stageFile(cwd, filePath);
+  });
+
+  // Unstage a file
+  ipcMain.handle(IPC_CHANNELS.GIT_UNSTAGE, async (_event, cwd: string, filePath: string) => {
+    return gitManager.unstageFile(cwd, filePath);
+  });
+
+  // Create commit
+  ipcMain.handle(IPC_CHANNELS.GIT_COMMIT, async (_event, cwd: string, message: string) => {
+    return gitManager.commit(cwd, message);
+  });
+
+  // Push to remote
+  ipcMain.handle(IPC_CHANNELS.GIT_PUSH, async (_event, cwd: string) => {
+    return gitManager.push(cwd);
+  });
+
+  // Pull from remote
+  ipcMain.handle(IPC_CHANNELS.GIT_PULL, async (_event, cwd: string) => {
+    return gitManager.pull(cwd);
+  });
+
+  // Get diff
+  ipcMain.handle(IPC_CHANNELS.GIT_DIFF, async (_event, cwd: string, filePath?: string, staged?: boolean) => {
+    return gitManager.getDiff(cwd, filePath, staged);
   });
 }

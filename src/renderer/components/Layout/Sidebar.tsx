@@ -9,6 +9,8 @@ import React from 'react';
 import { useProjectStore } from '../../stores/projectStore';
 import { useTaskStore } from '../../stores/taskStore';
 import AgentList from '../Agent/AgentList';
+import FileExplorer from '../FileExplorer/FileExplorer';
+import GitPanel from '../Git/GitPanel';
 import './Sidebar.css';
 
 /**
@@ -74,6 +76,20 @@ function Sidebar(): React.ReactElement {
           </div>
         )}
       </div>
+
+      {/* File explorer section */}
+      {activeProject && (
+        <div className="sidebar-section sidebar-section-files">
+          <FileExplorer />
+        </div>
+      )}
+
+      {/* Git section */}
+      {activeProject && (
+        <div className="sidebar-section sidebar-section-git">
+          <GitPanel />
+        </div>
+      )}
 
       {/* Agents section */}
       <div className="sidebar-section sidebar-section-grow">

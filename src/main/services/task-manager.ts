@@ -10,6 +10,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { Task, TaskStartRequest, StreamChunk, Commit, IPC_CHANNELS } from '../../shared/types';
 import { fileWatcher } from './file-watcher';
 import { commitManager } from './commit-manager';
+import { notificationManager } from './notification-manager';
 import { composePrompt, parseCommitMetadata } from '../utils/prompt-composer';
 import { spawn, ChildProcess } from 'child_process';
 
@@ -287,23 +288,35 @@ export class TaskManager {
 
   /**
    * Emits task completion to the renderer.
+   * Also triggers desktop notification if task completed successfully.
    */
   private emitComplete(taskId: string, commit: Commit): void {
     const win = this.getWindow();
     const task = this.tasks.get(taskId);
     if (win && task) {
       win.webContents.send(IPC_CHANNELS.TASK_COMPLETE, { taskId, task, commit });
+
+      // Send desktop notification for completed task
+      if (task.status === 'completed') {
+        notificationManager.notifyTaskComplete(task.projectName, commit);
+      } else if (task.status === 'failed') {
+        notificationManager.notifyTaskFailed(task.projectName, 'Task execution failed');
+      }
     }
   }
 
   /**
    * Emits task error to the renderer.
+   * Also triggers desktop notification for failed task.
    */
   private emitError(taskId: string, error: string): void {
     const win = this.getWindow();
     const task = this.tasks.get(taskId);
     if (win && task) {
       win.webContents.send(IPC_CHANNELS.TASK_ERROR, { taskId, task, error });
+
+      // Send desktop notification for failed task
+      notificationManager.notifyTaskFailed(task.projectName, error);
     }
   }
 }

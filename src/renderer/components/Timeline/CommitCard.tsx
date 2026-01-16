@@ -10,6 +10,7 @@ import React, { useState } from 'react';
 import { useCommitStore } from '../../stores/commitStore';
 import { useProjectStore } from '../../stores/projectStore';
 import { Commit } from '../../../shared/types';
+import { InlineDiffViewer } from '../Diff/DiffViewer';
 import './CommitCard.css';
 
 interface CommitCardProps {
@@ -110,15 +111,20 @@ function CommitCard({ commit }: CommitCardProps): React.ReactElement {
               <h4 className="commit-card-section-title">Files Changed</h4>
               <div className="commit-card-files">
                 {commit.filesystem_changes.files_written.map(file => (
-                  <div key={file} className="commit-card-file commit-card-file-written">
-                    <span className="commit-card-file-indicator">M</span>
-                    <span className="commit-card-file-path">{file}</span>
+                  <div key={file} className="commit-card-file-container">
+                    <div className="commit-card-file commit-card-file-written">
+                      <span className="commit-card-file-indicator">M</span>
+                      <span className="commit-card-file-path">{file}</span>
+                    </div>
+                    <InlineDiffViewer filePath={file} />
                   </div>
                 ))}
                 {commit.filesystem_changes.files_deleted.map(file => (
-                  <div key={file} className="commit-card-file commit-card-file-deleted">
-                    <span className="commit-card-file-indicator">D</span>
-                    <span className="commit-card-file-path">{file}</span>
+                  <div key={file} className="commit-card-file-container">
+                    <div className="commit-card-file commit-card-file-deleted">
+                      <span className="commit-card-file-indicator">D</span>
+                      <span className="commit-card-file-path">{file}</span>
+                    </div>
                   </div>
                 ))}
               </div>

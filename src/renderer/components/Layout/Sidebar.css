@@ -37,7 +37,24 @@
 
 .sidebar-section-grow {
   flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
   overflow: hidden;
+}
+
+.sidebar-section-files {
+  flex: 1;
+  max-height: 30%;
+  overflow: hidden;
+  padding: 0;
+}
+
+.sidebar-section-git {
+  flex-shrink: 0;
+  max-height: 35%;
+  overflow: hidden;
+  padding: 0;
 }
 
 .sidebar-section-header {

@@ -7,7 +7,7 @@
  */
 
 import { contextBridge, ipcRenderer } from 'electron';
-import { Agent, Commit, ExecutionRequest, Task, TaskStartRequest, StreamChunk, IPC_CHANNELS } from '../shared/types';
+import { Agent, Commit, ExecutionRequest, Task, TaskStartRequest, StreamChunk, AppSettings, TreeNode, GitStatus, GitResult, IPC_CHANNELS } from '../shared/types';
 
 /**
  * API exposed to the renderer process.
@@ -183,6 +183,92 @@ const api = {
       return () => {
         ipcRenderer.removeListener(IPC_CHANNELS.TASK_ERROR, handler);
       };
+    }
+  },
+
+  // Settings operations
+  settings: {
+    /**
+     * Loads all application settings.
+     */
+    load: (): Promise<AppSettings> => {
+      return ipcRenderer.invoke(IPC_CHANNELS.SETTINGS_LOAD);
+    },
+
+    /**
+     * Saves partial settings update.
+     */
+    save: (updates: Partial<AppSettings>): Promise<AppSettings> => {
+      return ipcRenderer.invoke(IPC_CHANNELS.SETTINGS_SAVE, updates);
+    }
+  },
+
+  // File explorer operations
+  files: {
+    /**
+     * Gets the directory tree for a root path.
+     */
+    getTree: (rootPath: string): Promise<TreeNode | null> => {
+      return ipcRenderer.invoke(IPC_CHANNELS.FILES_READ, rootPath);
+    },
+
+    /**
+     * Lists children of a directory (for lazy loading).
+     */
+    listChildren: (dirPath: string): Promise<TreeNode[]> => {
+      return ipcRenderer.invoke(IPC_CHANNELS.FILES_LIST, dirPath);
+    }
+  },
+
+  // Git operations
+  git: {
+    /**
+     * Gets the git status for a repository.
+     */
+    getStatus: (path: string): Promise<GitStatus> => {
+      return ipcRenderer.invoke(IPC_CHANNELS.GIT_STATUS, path);
+    },
+
+    /**
+     * Stages a file.
+     */
+    stage: (cwd: string, filePath: string): Promise<GitResult> => {
+      return ipcRenderer.invoke(IPC_CHANNELS.GIT_STAGE, cwd, filePath);
+    },
+
+    /**
+     * Unstages a file.
+     */
+    unstage: (cwd: string, filePath: string): Promise<GitResult> => {
+      return ipcRenderer.invoke(IPC_CHANNELS.GIT_UNSTAGE, cwd, filePath);
+    },
+
+    /**
+     * Creates a commit.
+     */
+    commit: (cwd: string, message: string): Promise<GitResult> => {
+      return ipcRenderer.invoke(IPC_CHANNELS.GIT_COMMIT, cwd, message);
+    },
+
+    /**
+     * Pushes to remote.
+     */
+    push: (cwd: string): Promise<GitResult> => {
+      return ipcRenderer.invoke(IPC_CHANNELS.GIT_PUSH, cwd);
+    },
+
+    /**
+     * Pulls from remote.
+     */
+    pull: (cwd: string): Promise<GitResult> => {
+      return ipcRenderer.invoke(IPC_CHANNELS.GIT_PULL, cwd);
+    },
+
+    /**
+     * Gets diff for a file or all changes.
+     */
+    getDiff: (cwd: string, filePath?: string, staged?: boolean): Promise<string> => {
+      return ipcRenderer.invoke(IPC_CHANNELS.GIT_DIFF, cwd, filePath, staged);
     }
   }
 };

@@ -135,3 +135,25 @@
   color: var(--color-text-primary);
   background-color: var(--color-bg-tertiary);
 }
+
+.tab-bar-settings {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  background: none;
+  border: none;
+  border-radius: var(--radius-sm);
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  flex-shrink: 0;
+  -webkit-app-region: no-drag;
+}
+
+.tab-bar-settings:hover {
+  color: var(--color-text-primary);
+  background-color: var(--color-bg-tertiary);
+}

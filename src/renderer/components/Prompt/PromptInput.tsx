@@ -9,6 +9,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useProjectStore } from '../../stores/projectStore';
 import { useAgentStore } from '../../stores/agentStore';
 import { useTaskStore } from '../../stores/taskStore';
+import { usePromptHistoryStore } from '../../stores/promptHistoryStore';
 import './PromptInput.css';
 
 /**
@@ -18,12 +19,27 @@ function PromptInput(): React.ReactElement {
   const { getActiveProject } = useProjectStore();
   const { selectedAgent } = useAgentStore();
   const { tasks, startTask } = useTaskStore();
+  const {
+    setProject,
+    addPrompt: addToHistory,
+    navigateUp,
+    navigateDown,
+    setTempPrompt,
+    currentIndex
+  } = usePromptHistoryStore();
 
   const [prompt, setPrompt] = useState('');
   const [isStarting, setIsStarting] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const activeProject = getActiveProject();
+
+  // Sync history store with active project
+  useEffect(() => {
+    if (activeProject) {
+      setProject(activeProject.id);
+    }
+  }, [activeProject, setProject]);
 
   // Check if there's a running task for this project
   const hasRunningTask = activeProject
@@ -46,6 +62,7 @@ function PromptInput(): React.ReactElement {
     }
 
     setIsStarting(true);
+    const promptText = prompt.trim();
 
     try {
       const taskId = await startTask({
@@ -53,11 +70,12 @@ function PromptInput(): React.ReactElement {
         projectPath: activeProject.path,
         projectName: activeProject.name,
         agent: selectedAgent,
-        userPrompt: prompt.trim()
+        userPrompt: promptText
       });
 
       if (taskId) {
-        // Clear prompt on successful start
+        // Add to history and clear prompt on successful start
+        addToHistory(promptText);
         setPrompt('');
       }
     } finally {
@@ -71,6 +89,38 @@ function PromptInput(): React.ReactElement {
     if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
       e.preventDefault();
       handleExecute();
+      return;
+    }
+
+    // Arrow Up to navigate to older prompts
+    if (e.key === 'ArrowUp') {
+      // Only navigate if cursor is at start of input or input is single line
+      const textarea = textareaRef.current;
+      if (textarea && (textarea.selectionStart === 0 || !prompt.includes('\n'))) {
+        e.preventDefault();
+        // Save current prompt before navigating
+        if (currentIndex === -1) {
+          setTempPrompt(prompt);
+        }
+        const historyPrompt = navigateUp();
+        if (historyPrompt !== null) {
+          setPrompt(historyPrompt);
+        }
+      }
+      return;
+    }
+
+    // Arrow Down to navigate to newer prompts
+    if (e.key === 'ArrowDown') {
+      // Only navigate if cursor is at end of input or input is single line
+      const textarea = textareaRef.current;
+      if (textarea && (textarea.selectionStart === prompt.length || !prompt.includes('\n'))) {
+        e.preventDefault();
+        const historyPrompt = navigateDown();
+        if (historyPrompt !== null) {
+          setPrompt(historyPrompt);
+        }
+      }
     }
   };
 
@@ -116,7 +166,18 @@ function PromptInput(): React.ReactElement {
 
       {/* Keyboard hint */}
       <div className="prompt-input-hint">
-        Press <kbd>Ctrl</kbd> + <kbd>Enter</kbd> to execute
+        <span>
+          <kbd>Ctrl</kbd> + <kbd>Enter</kbd> to execute
+        </span>
+        <span className="prompt-input-hint-separator">|</span>
+        <span>
+          <kbd>↑</kbd> <kbd>↓</kbd> for history
+        </span>
+        {currentIndex >= 0 && (
+          <span className="prompt-input-history-indicator">
+            (browsing history)
+          </span>
+        )}
       </div>
     </div>
   );

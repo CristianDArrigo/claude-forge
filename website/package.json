@@ -1,0 +1,18 @@
+{
+  "name": "claude-forge-website",
+  "version": "1.0.0",
+  "description": "Claude Forge - Official Website & Documentation",
+  "type": "module",
+  "scripts": {
+    "dev": "vitepress dev",
+    "build": "vitepress build",
+    "preview": "vitepress preview"
+  },
+  "keywords": ["claude", "forge", "ai", "electron", "documentation"],
+  "author": "Cristian D'Arrigo",
+  "license": "MIT",
+  "devDependencies": {
+    "vitepress": "^1.6.4",
+    "vue": "^3.5.26"
+  }
+}

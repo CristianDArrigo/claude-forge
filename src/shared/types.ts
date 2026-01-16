@@ -169,8 +169,86 @@ export const IPC_CHANNELS = {
   COMMIT_LIST: 'commit:list',
   COMMIT_GET: 'commit:get',
   COMMIT_DELETE: 'commit:delete',
-  COMMIT_DELETE_ALL: 'commit:delete-all'
+  COMMIT_DELETE_ALL: 'commit:delete-all',
+
+  // Settings operations
+  SETTINGS_LOAD: 'settings:load',
+  SETTINGS_SAVE: 'settings:save',
+
+  // File explorer operations
+  FILES_LIST: 'files:list',
+  FILES_READ: 'files:read',
+
+  // Git operations
+  GIT_STATUS: 'git:status',
+  GIT_STAGE: 'git:stage',
+  GIT_UNSTAGE: 'git:unstage',
+  GIT_COMMIT: 'git:commit',
+  GIT_PUSH: 'git:push',
+  GIT_PULL: 'git:pull',
+  GIT_DIFF: 'git:diff'
 } as const;
 
 // Type for IPC channel names
 export type IPCChannel = typeof IPC_CHANNELS[keyof typeof IPC_CHANNELS];
+
+// ============================================
+// SETTINGS TYPES
+// ============================================
+
+// Application settings stored in user data directory
+export interface AppSettings {
+  theme: 'dark' | 'light';
+  notifications: boolean;
+  maxPromptHistory: number;
+  sidebarCollapsed: boolean;
+}
+
+// ============================================
+// FILE EXPLORER TYPES
+// ============================================
+
+// File entry for directory listing
+export interface FileEntry {
+  name: string;
+  path: string;
+  type: 'file' | 'directory';
+  size?: number;
+  extension?: string;
+}
+
+// Tree node for recursive file structure
+export interface TreeNode extends FileEntry {
+  children?: TreeNode[];
+  isLoaded?: boolean;
+}
+
+// ============================================
+// GIT TYPES
+// ============================================
+
+// Git file change status
+export type GitChangeStatus = 'added' | 'modified' | 'deleted' | 'renamed' | 'untracked';
+
+// Git file change
+export interface GitChange {
+  path: string;
+  status: GitChangeStatus;
+  staged: boolean;
+}
+
+// Git repository status
+export interface GitStatus {
+  isRepo: boolean;
+  branch: string;
+  ahead: number;
+  behind: number;
+  changes: GitChange[];
+}
+
+// Git operation result
+export interface GitResult {
+  success: boolean;
+  message?: string;
+  error?: string;
+}
