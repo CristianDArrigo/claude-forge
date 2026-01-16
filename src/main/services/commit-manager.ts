@@ -6,7 +6,7 @@
  * JSON file in .claude_commits/.
  */
 
-import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from 'fs';
+import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync, unlinkSync } from 'fs';
 import { join } from 'path';
 import { Commit, Agent, Project, ExecutionInfo, PromptInfo, AIOutput, FilesystemChanges, CommitNotes } from '../../shared/types';
 
@@ -136,6 +136,54 @@ export class CommitManager {
     }
 
     return readdirSync(commitsDir).filter(file => file.endsWith('.json')).length;
+  }
+
+  /**
+   * Deletes a commit by ID, removing it from both memory and disk.
+   */
+  deleteCommit(projectPath: string, commitId: string): boolean {
+    const commitsDir = join(projectPath, COMMITS_DIR);
+
+    // Convert commit ID to filename format
+    const filename = commitId.replace(/:/g, '-') + '.json';
+    const filePath = join(commitsDir, filename);
+
+    if (!existsSync(filePath)) {
+      return false;
+    }
+
+    try {
+      unlinkSync(filePath);
+      return true;
+    } catch (err) {
+      console.error(`Failed to delete commit ${commitId}:`, err);
+      return false;
+    }
+  }
+
+  /**
+   * Deletes all commits for a project.
+   */
+  deleteAllCommits(projectPath: string): number {
+    const commitsDir = join(projectPath, COMMITS_DIR);
+
+    if (!existsSync(commitsDir)) {
+      return 0;
+    }
+
+    const files = readdirSync(commitsDir).filter(file => file.endsWith('.json'));
+    let deleted = 0;
+
+    for (const file of files) {
+      try {
+        unlinkSync(join(commitsDir, file));
+        deleted++;
+      } catch (err) {
+        console.error(`Failed to delete commit file ${file}:`, err);
+      }
+    }
+
+    return deleted;
   }
 }
 

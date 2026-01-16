@@ -167,7 +167,9 @@ export const IPC_CHANNELS = {
 
   // Commit operations
   COMMIT_LIST: 'commit:list',
-  COMMIT_GET: 'commit:get'
+  COMMIT_GET: 'commit:get',
+  COMMIT_DELETE: 'commit:delete',
+  COMMIT_DELETE_ALL: 'commit:delete-all'
 } as const;
 
 // Type for IPC channel names

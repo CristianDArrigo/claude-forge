@@ -8,6 +8,7 @@
 
 import React, { useState } from 'react';
 import { useCommitStore } from '../../stores/commitStore';
+import { useProjectStore } from '../../stores/projectStore';
 import { Commit } from '../../../shared/types';
 import './CommitCard.css';
 
@@ -32,10 +33,25 @@ function formatTimestamp(timestamp: string): string {
  * CommitCard component for displaying a single commit.
  */
 function CommitCard({ commit }: CommitCardProps): React.ReactElement {
-  const { expandedCommitIds, toggleExpanded } = useCommitStore();
+  const { expandedCommitIds, toggleExpanded, deleteCommit } = useCommitStore();
+  const { getActiveProject } = useProjectStore();
   const [showRawResponse, setShowRawResponse] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const isExpanded = expandedCommitIds.has(commit.commit_id);
+  const activeProject = getActiveProject();
+
+  // Handle delete with confirmation
+  const handleDelete = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!activeProject) return;
+
+    if (confirm('Are you sure you want to delete this commit? This cannot be undone.')) {
+      setIsDeleting(true);
+      await deleteCommit(activeProject.path, commit.commit_id);
+      setIsDeleting(false);
+    }
+  };
 
   // Count file changes
   const filesWritten = commit.filesystem_changes.files_written.length;
@@ -131,6 +147,17 @@ function CommitCard({ commit }: CommitCardProps): React.ReactElement {
             {showRawResponse && (
               <pre className="commit-card-raw">{commit.ai_output.raw_response}</pre>
             )}
+          </div>
+
+          {/* Delete button */}
+          <div className="commit-card-section commit-card-actions">
+            <button
+              className="btn btn-ghost commit-card-delete"
+              onClick={handleDelete}
+              disabled={isDeleting}
+            >
+              {isDeleting ? 'Deleting...' : 'Delete Commit'}
+            </button>
           </div>
         </div>
       )}

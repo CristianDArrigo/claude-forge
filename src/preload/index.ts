@@ -95,6 +95,20 @@ const api = {
      */
     get: (projectPath: string, commitId: string): Promise<Commit | null> => {
       return ipcRenderer.invoke(IPC_CHANNELS.COMMIT_GET, projectPath, commitId);
+    },
+
+    /**
+     * Deletes a specific commit by ID.
+     */
+    delete: (projectPath: string, commitId: string): Promise<{ success: boolean }> => {
+      return ipcRenderer.invoke(IPC_CHANNELS.COMMIT_DELETE, projectPath, commitId);
+    },
+
+    /**
+     * Deletes all commits for a project.
+     */
+    deleteAll: (projectPath: string): Promise<{ success: boolean; deleted: number }> => {
+      return ipcRenderer.invoke(IPC_CHANNELS.COMMIT_DELETE_ALL, projectPath);
     }
   },
 

@@ -18,6 +18,8 @@ interface CommitState {
   // Actions
   loadCommits: (projectPath: string) => Promise<void>;
   addCommit: (commit: Commit) => void;
+  deleteCommit: (projectPath: string, commitId: string) => Promise<boolean>;
+  deleteAllCommits: (projectPath: string) => Promise<number>;
   toggleExpanded: (commitId: string) => void;
   expandCommit: (commitId: string) => void;
   collapseCommit: (commitId: string) => void;
@@ -52,6 +54,43 @@ export const useCommitStore = create<CommitState>((set) => ({
       // Auto-expand the new commit
       expandedCommitIds: new Set([commit.commit_id, ...state.expandedCommitIds])
     }));
+  },
+
+  // Delete a specific commit
+  deleteCommit: async (projectPath: string, commitId: string) => {
+    try {
+      const result = await window.claudeForge.commit.delete(projectPath, commitId);
+      if (result.success) {
+        set(state => {
+          const newExpanded = new Set(state.expandedCommitIds);
+          newExpanded.delete(commitId);
+          return {
+            commits: state.commits.filter(c => c.commit_id !== commitId),
+            expandedCommitIds: newExpanded
+          };
+        });
+        return true;
+      }
+      return false;
+    } catch (err) {
+      set({ error: String(err) });
+      return false;
+    }
+  },
+
+  // Delete all commits for a project
+  deleteAllCommits: async (projectPath: string) => {
+    try {
+      const result = await window.claudeForge.commit.deleteAll(projectPath);
+      if (result.success) {
+        set({ commits: [], expandedCommitIds: new Set() });
+        return result.deleted;
+      }
+      return 0;
+    } catch (err) {
+      set({ error: String(err) });
+      return 0;
+    }
   },
 
   // Toggle expansion state of a commit card

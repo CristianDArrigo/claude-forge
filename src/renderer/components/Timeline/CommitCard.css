@@ -200,3 +200,23 @@
   overflow-y: auto;
   line-height: var(--line-height-relaxed);
 }
+
+/* Actions section */
+.commit-card-actions {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: var(--space-md);
+  border-top: 1px solid var(--color-border);
+  margin-top: var(--space-md);
+}
+
+.commit-card-delete {
+  font-size: var(--font-size-xs);
+  padding: var(--space-xs) var(--space-sm);
+  color: var(--color-text-muted);
+}
+
+.commit-card-delete:hover:not(:disabled) {
+  color: #ef4444;
+  background-color: rgba(239, 68, 68, 0.1);
+}

@@ -124,9 +124,14 @@ export class ClaudeExecutor {
       // Spawn Claude CLI with non-interactive flags
       // --print: non-interactive output mode
       // --dangerously-skip-permissions: bypass all permission checks for full automation
-      const proc = spawn('claude', ['--print', '--dangerously-skip-permissions', prompt], {
+      // shell: false to avoid escaping issues with complex prompts
+      const proc = spawn('claude', [
+        '--print',
+        '--dangerously-skip-permissions',
+        prompt
+      ], {
         cwd: workingDirectory,
-        shell: true,
+        shell: false,
         env: { ...process.env }
       });
 

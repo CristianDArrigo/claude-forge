@@ -101,6 +101,18 @@ export function registerIPCHandlers(): void {
     return commitManager.getCommit(projectPath, commitId);
   });
 
+  // Delete a specific commit
+  ipcMain.handle(IPC_CHANNELS.COMMIT_DELETE, async (_event, projectPath: string, commitId: string) => {
+    const success = commitManager.deleteCommit(projectPath, commitId);
+    return { success };
+  });
+
+  // Delete all commits for a project
+  ipcMain.handle(IPC_CHANNELS.COMMIT_DELETE_ALL, async (_event, projectPath: string) => {
+    const count = commitManager.deleteAllCommits(projectPath);
+    return { success: true, deleted: count };
+  });
+
   // Task handlers (streaming execution)
 
   // Start a new task
