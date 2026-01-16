@@ -7,7 +7,13 @@
  */
 
 import { spawn } from 'child_process';
-import { Agent, Commit, ExecutionRequest } from '../../shared/types';
+import { createHash } from 'crypto';
+import { Commit, ExecutionRequest } from '../../shared/types';
+
+// Generate a unique ID from a path
+function generateProjectId(path: string): string {
+  return createHash('md5').update(path).digest('hex').substring(0, 12);
+}
 import { fileWatcher } from './file-watcher';
 import { commitManager } from './commit-manager';
 import { composePrompt, parseCommitMetadata } from '../utils/prompt-composer';
@@ -64,6 +70,7 @@ export class ClaudeExecutor {
       // Create the commit object
       const commit = commitManager.createCommit({
         project: {
+          id: generateProjectId(request.projectPath),
           name: request.projectPath.split(/[/\\]/).pop() || 'unknown',
           path: request.projectPath
         },

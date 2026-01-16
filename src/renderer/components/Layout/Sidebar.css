@@ -48,18 +48,94 @@
   font-size: var(--font-size-xs);
 }
 
-/* Project info styling */
-.project-info {
+/* Project list styling */
+.project-list {
   display: flex;
   flex-direction: column;
-  gap: var(--space-xs);
+  gap: 2px;
 }
 
-.project-name {
-  font-size: var(--font-size-md);
-  font-weight: var(--font-weight-medium);
+.project-list-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+}
+
+.project-list-item:hover {
+  background-color: var(--color-bg-tertiary);
+}
+
+.project-list-item-active {
+  background-color: var(--color-bg-tertiary);
+}
+
+.project-list-item-info {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  min-width: 0;
+}
+
+.project-list-item-name {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.project-list-item-active .project-list-item-name {
   color: var(--color-text-primary);
-  word-break: break-word;
+  font-weight: var(--font-weight-medium);
+}
+
+.project-list-item-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 4px;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  background-color: var(--color-bg-elevated);
+  border-radius: var(--radius-full);
+}
+
+.project-list-item-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  background: none;
+  border: none;
+  border-radius: var(--radius-sm);
+  color: var(--color-text-muted);
+  cursor: pointer;
+  opacity: 0;
+  transition: all var(--transition-fast);
+}
+
+.project-list-item:hover .project-list-item-close {
+  opacity: 1;
+}
+
+.project-list-item-close:hover {
+  color: var(--color-text-primary);
+  background-color: var(--color-bg-hover);
+}
+
+.project-path-info {
+  margin-top: var(--space-sm);
+  padding-top: var(--space-sm);
+  border-top: 1px solid var(--color-border);
 }
 
 .project-path {

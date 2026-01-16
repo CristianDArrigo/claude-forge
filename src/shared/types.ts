@@ -22,6 +22,7 @@ export interface Agent {
 
 // Project metadata
 export interface Project {
+  id: string;      // Unique identifier (hash of path)
   name: string;
   path: string;    // Absolute path to project directory
 }
@@ -93,6 +94,49 @@ export interface ProjectResult {
   error?: string;
 }
 
+// Task status for execution tracking
+export type TaskStatus = 'queued' | 'running' | 'completed' | 'failed' | 'cancelled';
+
+// Task representing a single execution (supports background execution)
+export interface Task {
+  id: string;
+  projectId: string;
+  projectPath: string;
+  projectName: string;
+  agent: Agent;
+  prompt: string;
+  status: TaskStatus;
+  startTime: string;
+  endTime?: string;
+  output: string;           // Accumulated streaming output
+  commit?: Commit;          // Set on completion
+  error?: string;
+}
+
+// Stream chunk for real-time output
+export interface StreamChunk {
+  taskId: string;
+  type: 'stdout' | 'stderr' | 'status';
+  data: string;
+  timestamp: number;
+}
+
+// Task start request
+export interface TaskStartRequest {
+  projectId: string;
+  projectPath: string;
+  projectName: string;
+  agent: Agent;
+  userPrompt: string;
+}
+
+// Task start result
+export interface TaskStartResult {
+  success: boolean;
+  taskId?: string;
+  error?: string;
+}
+
 // IPC channel names for type-safe communication
 export const IPC_CHANNELS = {
   // Project operations
@@ -106,9 +150,20 @@ export const IPC_CHANNELS = {
   AGENT_UPDATE: 'agent:update',
   AGENT_DELETE: 'agent:delete',
 
-  // Execution operations
+  // Legacy execution operations (kept for compatibility)
   EXECUTE_RUN: 'execute:run',
   EXECUTE_STATUS: 'execute:status',
+
+  // Task operations (streaming execution)
+  TASK_START: 'task:start',
+  TASK_CANCEL: 'task:cancel',
+  TASK_LIST: 'task:list',
+  TASK_GET: 'task:get',
+
+  // Task events (main -> renderer)
+  TASK_STREAM: 'task:stream',
+  TASK_COMPLETE: 'task:complete',
+  TASK_ERROR: 'task:error',
 
   // Commit operations
   COMMIT_LIST: 'commit:list',

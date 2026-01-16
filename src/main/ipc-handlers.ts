@@ -7,11 +7,12 @@
  */
 
 import { ipcMain, dialog } from 'electron';
-import { IPC_CHANNELS, Agent, ExecutionRequest } from '../shared/types';
+import { IPC_CHANNELS, Agent, ExecutionRequest, TaskStartRequest } from '../shared/types';
 import { projectManager } from './services/project-manager';
 import { agentManager } from './services/agent-manager';
 import { claudeExecutor } from './services/claude-executor';
 import { commitManager } from './services/commit-manager';
+import { taskManager } from './services/task-manager';
 
 /**
  * Registers all IPC handlers.
@@ -98,5 +99,32 @@ export function registerIPCHandlers(): void {
   // Get specific commit
   ipcMain.handle(IPC_CHANNELS.COMMIT_GET, async (_event, projectPath: string, commitId: string) => {
     return commitManager.getCommit(projectPath, commitId);
+  });
+
+  // Task handlers (streaming execution)
+
+  // Start a new task
+  ipcMain.handle(IPC_CHANNELS.TASK_START, async (_event, request: TaskStartRequest) => {
+    const result = taskManager.startTask(request);
+    if (result.error) {
+      return { success: false, error: result.error };
+    }
+    return { success: true, taskId: result.taskId };
+  });
+
+  // Cancel a running task
+  ipcMain.handle(IPC_CHANNELS.TASK_CANCEL, async (_event, taskId: string) => {
+    const success = taskManager.cancelTask(taskId);
+    return { success };
+  });
+
+  // List all tasks
+  ipcMain.handle(IPC_CHANNELS.TASK_LIST, async () => {
+    return taskManager.listTasks();
+  });
+
+  // Get a specific task
+  ipcMain.handle(IPC_CHANNELS.TASK_GET, async (_event, taskId: string) => {
+    return taskManager.getTask(taskId) || null;
   });
 }

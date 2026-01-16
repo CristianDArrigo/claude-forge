@@ -5,23 +5,30 @@
  * Displays the selected agent and provides execution controls.
  */
 
-import React, { useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useProjectStore } from '../../stores/projectStore';
 import { useAgentStore } from '../../stores/agentStore';
-import { useExecutionStore } from '../../stores/executionStore';
-import { useCommitStore } from '../../stores/commitStore';
+import { useTaskStore } from '../../stores/taskStore';
 import './PromptInput.css';
 
 /**
  * PromptInput component for entering and executing prompts.
  */
 function PromptInput(): React.ReactElement {
-  const { project } = useProjectStore();
+  const { getActiveProject } = useProjectStore();
   const { selectedAgent } = useAgentStore();
-  const { status, currentPrompt, setPrompt, execute } = useExecutionStore();
-  const { addCommit } = useCommitStore();
+  const { tasks, startTask } = useTaskStore();
 
+  const [prompt, setPrompt] = useState('');
+  const [isStarting, setIsStarting] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  const activeProject = getActiveProject();
+
+  // Check if there's a running task for this project
+  const hasRunningTask = activeProject
+    ? tasks.some(t => t.projectId === activeProject.id && t.status === 'running')
+    : false;
 
   // Auto-resize textarea based on content
   useEffect(() => {
@@ -30,18 +37,31 @@ function PromptInput(): React.ReactElement {
       textarea.style.height = 'auto';
       textarea.style.height = Math.min(textarea.scrollHeight, 200) + 'px';
     }
-  }, [currentPrompt]);
+  }, [prompt]);
 
   // Handle execute button click
   const handleExecute = async () => {
-    if (!project || !selectedAgent || !currentPrompt.trim()) {
+    if (!activeProject || !selectedAgent || !prompt.trim() || isStarting) {
       return;
     }
 
-    const commit = await execute(project.path, selectedAgent, currentPrompt.trim());
+    setIsStarting(true);
 
-    if (commit) {
-      addCommit(commit);
+    try {
+      const taskId = await startTask({
+        projectId: activeProject.id,
+        projectPath: activeProject.path,
+        projectName: activeProject.name,
+        agent: selectedAgent,
+        userPrompt: prompt.trim()
+      });
+
+      if (taskId) {
+        // Clear prompt on successful start
+        setPrompt('');
+      }
+    } finally {
+      setIsStarting(false);
     }
   };
 
@@ -54,8 +74,8 @@ function PromptInput(): React.ReactElement {
     }
   };
 
-  const isExecuting = status === 'preparing' || status === 'executing';
-  const canExecute = project && selectedAgent && currentPrompt.trim() && !isExecuting;
+  const isExecuting = isStarting || hasRunningTask;
+  const canExecute = activeProject && selectedAgent && prompt.trim() && !isExecuting;
 
   return (
     <div className="prompt-input-container">
@@ -78,7 +98,7 @@ function PromptInput(): React.ReactElement {
         <textarea
           ref={textareaRef}
           className="prompt-input-textarea"
-          value={currentPrompt}
+          value={prompt}
           onChange={e => setPrompt(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder="Enter your prompt..."
@@ -90,7 +110,7 @@ function PromptInput(): React.ReactElement {
           onClick={handleExecute}
           disabled={!canExecute}
         >
-          {isExecuting ? 'Running...' : 'Execute'}
+          {isStarting ? 'Starting...' : hasRunningTask ? 'Running...' : 'Execute'}
         </button>
       </div>
 

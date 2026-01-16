@@ -13,7 +13,7 @@ import './ProjectSelector.css';
  * ProjectSelector component for project opening/creation.
  */
 function ProjectSelector(): React.ReactElement {
-  const { openProject, createProject, isLoading, error, clearError } = useProjectStore();
+  const { openProject, isLoading, error, clearError } = useProjectStore();
 
   return (
     <div className="project-selector">
@@ -47,10 +47,10 @@ function ProjectSelector(): React.ReactElement {
           </button>
           <button
             className="btn btn-secondary project-selector-btn"
-            onClick={createProject}
+            onClick={openProject}
             disabled={isLoading}
           >
-            Create New Project
+            Select Folder
           </button>
         </div>
 

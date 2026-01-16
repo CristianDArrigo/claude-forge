@@ -1,0 +1,124 @@
+/**
+ * TabBar Component Styles
+ */
+
+.tab-bar {
+  display: flex;
+  align-items: center;
+  height: 40px;
+  background-color: var(--color-bg-secondary);
+  border-bottom: 1px solid var(--color-border);
+  padding: 0 var(--space-sm);
+  gap: var(--space-xs);
+  flex-shrink: 0;
+  -webkit-app-region: drag;  /* Allow window dragging on macOS */
+}
+
+.tab-bar-tabs {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  flex: 1;
+  overflow-x: auto;
+  -webkit-app-region: no-drag;
+}
+
+.tab-bar-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.tab-bar-tab {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  height: 32px;
+  padding: 0 var(--space-sm) 0 var(--space-md);
+  background-color: transparent;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+  max-width: 180px;
+  flex-shrink: 0;
+}
+
+.tab-bar-tab:hover {
+  background-color: var(--color-bg-tertiary);
+}
+
+.tab-bar-tab-active {
+  background-color: var(--color-bg-tertiary);
+}
+
+.tab-bar-tab-name {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tab-bar-tab-active .tab-bar-tab-name {
+  color: var(--color-text-primary);
+}
+
+.tab-bar-tab-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 4px;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  background-color: var(--color-bg-elevated);
+  border-radius: var(--radius-full);
+}
+
+.tab-bar-tab-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  background: none;
+  border: none;
+  border-radius: var(--radius-sm);
+  color: var(--color-text-muted);
+  cursor: pointer;
+  opacity: 0;
+  transition: all var(--transition-fast);
+}
+
+.tab-bar-tab:hover .tab-bar-tab-close {
+  opacity: 1;
+}
+
+.tab-bar-tab-close:hover {
+  color: var(--color-text-primary);
+  background-color: var(--color-bg-hover);
+}
+
+.tab-bar-add {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  background: none;
+  border: none;
+  border-radius: var(--radius-sm);
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  flex-shrink: 0;
+  -webkit-app-region: no-drag;
+}
+
+.tab-bar-add:hover {
+  color: var(--color-text-primary);
+  background-color: var(--color-bg-tertiary);
+}

@@ -1,41 +1,53 @@
 /**
  * Claude Forge - Main Application Component
  *
- * The root component that manages the application layout and
- * coordinates between the sidebar and main content areas.
+ * The root component that manages the application layout with
+ * multi-project tabs, sidebar, main content, and tasks panel.
  */
 
 import React, { useEffect } from 'react';
 import { useProjectStore } from './stores/projectStore';
 import { useAgentStore } from './stores/agentStore';
 import { useCommitStore } from './stores/commitStore';
+import { useTaskStore } from './stores/taskStore';
+import TabBar from './components/Layout/TabBar';
 import Sidebar from './components/Layout/Sidebar';
 import MainContent from './components/Layout/MainContent';
+import TasksPanel from './components/Tasks/TasksPanel';
 import ProjectSelector from './components/Project/ProjectSelector';
 
 /**
  * Main application component.
- * Displays project selector if no project is open,
- * otherwise shows the main workspace.
+ * Displays project selector if no projects are open,
+ * otherwise shows the full workspace with tabs.
  */
 function App(): React.ReactElement {
-  const { project, isLoading } = useProjectStore();
+  const { projects, isLoading, getActiveProject } = useProjectStore();
   const { loadAgents } = useAgentStore();
   const { loadCommits, clearCommits } = useCommitStore();
+  const { initializeListeners } = useTaskStore();
+
+  const activeProject = getActiveProject();
 
   // Load agents on mount
   useEffect(() => {
     loadAgents();
   }, [loadAgents]);
 
-  // Load commits when project changes
+  // Initialize task event listeners
   useEffect(() => {
-    if (project) {
-      loadCommits(project.path);
+    const cleanup = initializeListeners();
+    return cleanup;
+  }, [initializeListeners]);
+
+  // Load commits when active project changes
+  useEffect(() => {
+    if (activeProject) {
+      loadCommits(activeProject.path);
     } else {
       clearCommits();
     }
-  }, [project, loadCommits, clearCommits]);
+  }, [activeProject, loadCommits, clearCommits]);
 
   // Show loading state
   if (isLoading) {
@@ -47,16 +59,20 @@ function App(): React.ReactElement {
     );
   }
 
-  // Show project selector if no project is open
-  if (!project) {
+  // Show project selector if no projects are open
+  if (projects.length === 0) {
     return <ProjectSelector />;
   }
 
-  // Main workspace layout
+  // Main workspace layout with multi-project support
   return (
     <div className="app-container">
-      <Sidebar />
-      <MainContent />
+      <TabBar />
+      <div className="app-workspace">
+        <Sidebar />
+        <MainContent />
+      </div>
+      <TasksPanel />
     </div>
   );
 }

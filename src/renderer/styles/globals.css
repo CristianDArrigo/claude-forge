@@ -28,11 +28,20 @@ body {
   overflow: hidden;
 }
 
-/* Main application container */
+/* Main application container - vertical layout */
 .app-container {
   display: flex;
+  flex-direction: column;
   height: 100%;
   width: 100%;
+}
+
+/* Workspace area - horizontal layout with sidebar and main content */
+.app-workspace {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
 }
 
 /* Loading state */

@@ -7,7 +7,7 @@
  */
 
 import { contextBridge, ipcRenderer } from 'electron';
-import { Agent, Commit, ExecutionRequest, IPC_CHANNELS } from '../shared/types';
+import { Agent, Commit, ExecutionRequest, Task, TaskStartRequest, StreamChunk, IPC_CHANNELS } from '../shared/types';
 
 /**
  * API exposed to the renderer process.
@@ -95,6 +95,80 @@ const api = {
      */
     get: (projectPath: string, commitId: string): Promise<Commit | null> => {
       return ipcRenderer.invoke(IPC_CHANNELS.COMMIT_GET, projectPath, commitId);
+    }
+  },
+
+  // Task operations (streaming execution)
+  task: {
+    /**
+     * Starts a new task with streaming output.
+     * Returns immediately with taskId, streams output via events.
+     */
+    start: (request: TaskStartRequest): Promise<{ success: boolean; taskId?: string; error?: string }> => {
+      return ipcRenderer.invoke(IPC_CHANNELS.TASK_START, request);
+    },
+
+    /**
+     * Cancels a running task.
+     */
+    cancel: (taskId: string): Promise<{ success: boolean }> => {
+      return ipcRenderer.invoke(IPC_CHANNELS.TASK_CANCEL, taskId);
+    },
+
+    /**
+     * Lists all tasks.
+     */
+    list: (): Promise<Task[]> => {
+      return ipcRenderer.invoke(IPC_CHANNELS.TASK_LIST);
+    },
+
+    /**
+     * Gets a specific task by ID.
+     */
+    get: (taskId: string): Promise<Task | null> => {
+      return ipcRenderer.invoke(IPC_CHANNELS.TASK_GET, taskId);
+    },
+
+    /**
+     * Registers a listener for stream chunks.
+     * Returns a function to unsubscribe.
+     */
+    onStream: (callback: (chunk: StreamChunk) => void): (() => void) => {
+      const handler = (_event: Electron.IpcRendererEvent, chunk: StreamChunk) => {
+        callback(chunk);
+      };
+      ipcRenderer.on(IPC_CHANNELS.TASK_STREAM, handler);
+      return () => {
+        ipcRenderer.removeListener(IPC_CHANNELS.TASK_STREAM, handler);
+      };
+    },
+
+    /**
+     * Registers a listener for task completion.
+     * Returns a function to unsubscribe.
+     */
+    onComplete: (callback: (data: { taskId: string; task: Task; commit: Commit }) => void): (() => void) => {
+      const handler = (_event: Electron.IpcRendererEvent, data: { taskId: string; task: Task; commit: Commit }) => {
+        callback(data);
+      };
+      ipcRenderer.on(IPC_CHANNELS.TASK_COMPLETE, handler);
+      return () => {
+        ipcRenderer.removeListener(IPC_CHANNELS.TASK_COMPLETE, handler);
+      };
+    },
+
+    /**
+     * Registers a listener for task errors.
+     * Returns a function to unsubscribe.
+     */
+    onError: (callback: (data: { taskId: string; task: Task; error: string }) => void): (() => void) => {
+      const handler = (_event: Electron.IpcRendererEvent, data: { taskId: string; task: Task; error: string }) => {
+        callback(data);
+      };
+      ipcRenderer.on(IPC_CHANNELS.TASK_ERROR, handler);
+      return () => {
+        ipcRenderer.removeListener(IPC_CHANNELS.TASK_ERROR, handler);
+      };
     }
   }
 };

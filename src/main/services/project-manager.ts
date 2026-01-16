@@ -7,7 +7,13 @@
 
 import { existsSync, mkdirSync, readdirSync, statSync } from 'fs';
 import { join, basename } from 'path';
+import { createHash } from 'crypto';
 import { Project } from '../../shared/types';
+
+// Generate a unique ID from a path
+function generateProjectId(path: string): string {
+  return createHash('md5').update(path).digest('hex').substring(0, 12);
+}
 
 // Directory name for storing Claude Forge commits
 const COMMITS_DIR = '.claude_commits';
@@ -48,6 +54,7 @@ export class ProjectManager {
 
     // Create project object
     const project: Project = {
+      id: generateProjectId(projectPath),
       name: basename(projectPath),
       path: projectPath
     };
@@ -79,6 +86,7 @@ export class ProjectManager {
 
     // Create project object
     const project: Project = {
+      id: generateProjectId(projectPath),
       name: name || basename(projectPath),
       path: projectPath
     };
