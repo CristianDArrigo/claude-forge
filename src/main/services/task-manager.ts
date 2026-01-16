@@ -80,8 +80,10 @@ export class TaskManager {
         timestamp: Date.now()
       });
 
-      // Spawn Claude CLI process
-      const proc = spawn('claude', ['--print', composedPrompt], {
+      // Spawn Claude CLI process with non-interactive flags
+      // --print: non-interactive output mode
+      // --dangerously-skip-permissions: bypass all permission checks for full automation
+      const proc = spawn('claude', ['--print', '--dangerously-skip-permissions', composedPrompt], {
         cwd: request.projectPath,
         shell: true,
         env: { ...process.env }

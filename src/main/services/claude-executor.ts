@@ -121,8 +121,10 @@ export class ClaudeExecutor {
    */
   private runClaude(prompt: string, workingDirectory: string): Promise<ExecutionOutput> {
     return new Promise((resolve, reject) => {
-      // Spawn Claude CLI with --print flag for non-interactive mode
-      const proc = spawn('claude', ['--print', prompt], {
+      // Spawn Claude CLI with non-interactive flags
+      // --print: non-interactive output mode
+      // --dangerously-skip-permissions: bypass all permission checks for full automation
+      const proc = spawn('claude', ['--print', '--dangerously-skip-permissions', prompt], {
         cwd: workingDirectory,
         shell: true,
         env: { ...process.env }
