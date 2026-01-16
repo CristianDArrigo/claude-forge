@@ -22,8 +22,9 @@ import SplashScreen from './components/SplashScreen/SplashScreen';
  * Displays project selector if no projects are open,
  * otherwise shows the full workspace with tabs.
  */
-// Splash screen duration in milliseconds
+// Splash screen timing in milliseconds
 const SPLASH_DURATION = 3000;
+const FADE_DURATION = 800;
 
 function App(): React.ReactElement {
   const { projects, isLoading, getActiveProject } = useProjectStore();
@@ -32,15 +33,25 @@ function App(): React.ReactElement {
   const { initializeListeners } = useTaskStore();
 
   const [showSplash, setShowSplash] = useState(true);
+  const [fadeOutSplash, setFadeOutSplash] = useState(false);
   const activeProject = getActiveProject();
 
-  // Hide splash screen after duration
+  // Handle splash screen with fade transition
   useEffect(() => {
-    const timer = setTimeout(() => {
+    // Start fade out before hiding
+    const fadeTimer = setTimeout(() => {
+      setFadeOutSplash(true);
+    }, SPLASH_DURATION - FADE_DURATION);
+
+    // Hide splash after fade completes
+    const hideTimer = setTimeout(() => {
       setShowSplash(false);
     }, SPLASH_DURATION);
 
-    return () => clearTimeout(timer);
+    return () => {
+      clearTimeout(fadeTimer);
+      clearTimeout(hideTimer);
+    };
   }, []);
 
   // Load agents on mount
@@ -65,7 +76,7 @@ function App(): React.ReactElement {
 
   // Show splash screen on initial load
   if (showSplash) {
-    return <SplashScreen />;
+    return <SplashScreen fadeOut={fadeOutSplash} />;
   }
 
   // Show loading state
