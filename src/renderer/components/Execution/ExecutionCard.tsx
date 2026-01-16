@@ -8,6 +8,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useTaskStore } from '../../stores/taskStore';
 import { Task } from '../../../shared/types';
+import ClaudeIcon from '../Icons/ClaudeIcon';
 import './ExecutionCard.css';
 
 interface ExecutionCardProps {
@@ -92,7 +93,7 @@ function ExecutionCard({ task }: ExecutionCardProps): React.ReactElement {
       <div className="execution-card-header" onClick={toggleExpanded}>
         <div className="execution-card-status">
           {isRunning ? (
-            <div className="execution-card-spinner" />
+            <ClaudeIcon size={18} className="execution-card-icon" />
           ) : (
             <div className={`execution-card-dot execution-card-dot-${task.status}`} />
           )}

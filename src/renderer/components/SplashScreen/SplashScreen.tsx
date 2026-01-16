@@ -5,8 +5,10 @@
  */
 
 import React from 'react';
-import splashImage from '../../../../assets/frontpage.png';
 import './SplashScreen.css';
+
+// Splash image is served from public folder
+const splashImage = '/frontpage.png';
 
 interface SplashScreenProps {
   fadeOut?: boolean;

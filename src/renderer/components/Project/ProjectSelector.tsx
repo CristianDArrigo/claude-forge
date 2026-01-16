@@ -7,8 +7,10 @@
 
 import React from 'react';
 import { useProjectStore } from '../../stores/projectStore';
-import logoImage from '../../../../assets/logo.png';
 import './ProjectSelector.css';
+
+// Logo is served from public folder
+const logoImage = '/logo.png';
 
 /**
  * ProjectSelector component for project opening/creation.

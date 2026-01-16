@@ -9,6 +9,15 @@ import { app, BrowserWindow, Menu } from 'electron';
 import { join } from 'path';
 import { registerIPCHandlers } from './ipc-handlers';
 
+// Get the icon path based on environment
+function getIconPath(): string {
+  const isDev = !app.isPackaged;
+  if (isDev) {
+    return join(__dirname, '../../assets/icon.ico');
+  }
+  return join(process.resourcesPath, 'assets/icon.ico');
+}
+
 // Reference to the main window to prevent garbage collection
 let mainWindow: BrowserWindow | null = null;
 
@@ -38,6 +47,7 @@ function createWindow(): void {
     backgroundColor: '#0a0a0a', // Match our grayscale theme
     titleBarStyle: isMac ? 'hiddenInset' : 'default',
     frame: !isMac, // Use native frame on Windows/Linux
+    icon: getIconPath(), // Application icon
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
       nodeIntegration: false,     // Security: disable node in renderer

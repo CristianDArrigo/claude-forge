@@ -7,6 +7,7 @@
 
 import { create } from 'zustand';
 import { Task, TaskStartRequest, StreamChunk, Commit } from '../../shared/types';
+import { useCommitStore } from './commitStore';
 
 interface TaskState {
   // Task state
@@ -162,6 +163,8 @@ export const useTaskStore = create<TaskState>((set, get) => ({
     // Listen for task completion
     const unsubComplete = window.claudeForge.task.onComplete((data) => {
       completeTask(data.taskId, data.commit);
+      // Add commit to the commit store for timeline display
+      useCommitStore.getState().addCommit(data.commit);
     });
 
     // Listen for task errors

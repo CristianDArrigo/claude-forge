@@ -2,15 +2,41 @@
  * ExecutionCard Component Styles
  */
 
+/* Animation keyframes */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
 .execution-card {
   background-color: var(--color-bg-secondary);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   overflow: hidden;
+  animation: fadeInScale var(--transition-normal) ease-out;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
 }
 
 .execution-card-expanded {
   border-color: var(--color-border-light);
+  box-shadow: var(--shadow-md);
 }
 
 /* Header */
@@ -44,6 +70,23 @@
 
 @keyframes spin {
   to { transform: rotate(360deg); }
+}
+
+/* Claude icon with pulse animation when running */
+.execution-card-icon {
+  color: var(--color-text-primary);
+  animation: claudePulse 1.5s ease-in-out infinite;
+}
+
+@keyframes claudePulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.1);
+  }
 }
 
 .execution-card-dot {
@@ -108,6 +151,7 @@
 .execution-card-content {
   padding: 0 var(--space-md) var(--space-md);
   border-top: 1px solid var(--color-border);
+  animation: fadeIn var(--transition-fast) ease-out;
 }
 
 .execution-card-prompt {

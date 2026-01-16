@@ -9,6 +9,7 @@ import React from 'react';
 import { Task } from '../../../shared/types';
 import { useProjectStore } from '../../stores/projectStore';
 import { useTaskStore } from '../../stores/taskStore';
+import ClaudeIcon from '../Icons/ClaudeIcon';
 import './TasksPanel.css';
 
 interface TaskItemProps {
@@ -48,7 +49,7 @@ function TaskItem({ task }: TaskItemProps): React.ReactElement {
   const getStatusIcon = () => {
     switch (task.status) {
       case 'running':
-        return <div className="task-item-spinner" />;
+        return <ClaudeIcon size={14} className="task-item-claude-icon" />;
       case 'completed':
         return (
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
